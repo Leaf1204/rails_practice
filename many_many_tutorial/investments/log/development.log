@@ -1,0 +1,94 @@
+  [1m[35m (167.1ms)[0m  [1m[35mCREATE DATABASE "investments_development" ENCODING = 'unicode'[0m
+  [1m[35m (109.2ms)[0m  [1m[35mCREATE DATABASE "investments_test" ENCODING = 'unicode'[0m
+  [1m[35m (37.8ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (7.6ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT pg_try_advisory_lock(1939765790139759750)[0m
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateInvestors (20210315024133)
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (11.8ms)[0m  [1m[35mCREATE TABLE "investors" ("id" bigserial primary key, "name" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mprimary::SchemaMigration Create (2.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20210315024133"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateCompanies (20210315024303)
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (20.8ms)[0m  [1m[35mCREATE TABLE "companies" ("id" bigserial primary key, "name" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mprimary::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20210315024303"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateInvestments (20210315024549)
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (17.4ms)[0m  [1m[35mCREATE TABLE "investments" ("id" bigserial primary key, "investor_id" bigint NOT NULL, "company_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_dbdb982f17"
+FOREIGN KEY ("investor_id")
+  REFERENCES "investors" ("id")
+, CONSTRAINT "fk_rails_0d6258ac3c"
+FOREIGN KEY ("company_id")
+  REFERENCES "companies" ("id")
+)[0m
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE  INDEX  "index_investments_on_investor_id" ON "investments"  ("investor_id")[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE  INDEX  "index_investments_on_company_id" ON "investments"  ("company_id")[0m
+  [1m[36mprimary::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20210315024549"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.6ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (1.5ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", "2021-03-15 02:46:42.552098"], ["updated_at", "2021-03-15 02:46:42.552098"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT pg_advisory_unlock(1939765790139759750)[0m
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mInvestor Create (1.2ms)[0m  [1m[32mINSERT INTO "investors" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Bob"], ["created_at", "2021-03-15 03:07:18.488998"], ["updated_at", "2021-03-15 03:07:18.488998"]]
+  [1m[35m (0.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mCompany Create (0.9ms)[0m  [1m[32mINSERT INTO "companies" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "ABC"], ["created_at", "2021-03-15 03:10:23.704768"], ["updated_at", "2021-03-15 03:10:23.704768"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (10.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mInvestment Create (2.5ms)[0m  [1m[32mINSERT INTO "investments" ("investor_id", "company_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["investor_id", 1], ["company_id", 1], ["created_at", "2021-03-15 03:11:07.780261"], ["updated_at", "2021-03-15 03:11:07.780261"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mInvestor Load (1.4ms)[0m  [1m[34mSELECT "investors".* FROM "investors" WHERE "investors"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCompany Load (1.5ms)[0m  [1m[34mSELECT "companies".* FROM "companies" INNER JOIN "investments" ON "companies"."id" = "investments"."company_id" WHERE "investments"."investor_id" = $1 LIMIT $2[0m  [["investor_id", 1], ["LIMIT", 11]]
+  [1m[35m (14.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mCompany Create (0.7ms)[0m  [1m[32mINSERT INTO "companies" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "xyz"], ["created_at", "2021-03-15 03:18:31.838150"], ["updated_at", "2021-03-15 03:18:31.838150"]]
+  [1m[36mInvestment Create (1.3ms)[0m  [1m[32mINSERT INTO "investments" ("investor_id", "company_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["investor_id", 1], ["company_id", 2], ["created_at", "2021-03-15 03:18:31.866920"], ["updated_at", "2021-03-15 03:18:31.866920"]]
+  [1m[35m (0.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mCompany Load (5.4ms)[0m  [1m[34mSELECT "companies".* FROM "companies" INNER JOIN "investments" ON "companies"."id" = "investments"."company_id" WHERE "investments"."investor_id" = $1 LIMIT $2[0m  [["investor_id", 1], ["LIMIT", 11]]
+  [1m[36mCompany Load (0.3ms)[0m  [1m[34mSELECT "companies".* FROM "companies" WHERE "companies"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mInvestor Create (0.4ms)[0m  [1m[32mINSERT INTO "investors" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "lea"], ["created_at", "2021-03-15 03:21:13.685764"], ["updated_at", "2021-03-15 03:21:13.685764"]]
+  [1m[36mInvestment Create (0.5ms)[0m  [1m[32mINSERT INTO "investments" ("investor_id", "company_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["investor_id", 2], ["company_id", 1], ["created_at", "2021-03-15 03:21:13.687537"], ["updated_at", "2021-03-15 03:21:13.687537"]]
+  [1m[35m (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mInvestment Load (0.3ms)[0m  [1m[34mSELECT "investments".* FROM "investments" LIMIT $1[0m  [["LIMIT", 11]]
+  [1m[36mCompany Load (0.7ms)[0m  [1m[34mSELECT "companies".* FROM "companies" INNER JOIN "investments" ON "companies"."id" = "investments"."company_id" WHERE "investments"."investor_id" = $1 LIMIT $2[0m  [["investor_id", 1], ["LIMIT", 11]]
+  [1m[36mInvestor Load (0.6ms)[0m  [1m[34mSELECT "investors".* FROM "investors" INNER JOIN "investments" ON "investors"."id" = "investments"."investor_id" WHERE "investments"."company_id" = $1 LIMIT $2[0m  [["company_id", 1], ["LIMIT", 11]]
+  [1m[36mInvestor Load (0.7ms)[0m  [1m[34mSELECT "investors".* FROM "investors" WHERE "investors"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCompany Load (1.0ms)[0m  [1m[34mSELECT "companies".* FROM "companies" INNER JOIN "investments" ON "companies"."id" = "investments"."company_id" WHERE "investments"."investor_id" = $1 LIMIT $2[0m  [["investor_id", 1], ["LIMIT", 11]]
+  [1m[36mInvestor Load (0.4ms)[0m  [1m[34mSELECT "investors".* FROM "investors" WHERE "investors"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mInvestor Load (6.7ms)[0m  [1m[34mSELECT "investors".* FROM "investors" WHERE "investors"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  [1m[36mInvestor Load (0.5ms)[0m  [1m[34mSELECT "investors".* FROM "investors" WHERE "investors"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mInvestor Load (0.5ms)[0m  [1m[34mSELECT "investors".* FROM "investors" WHERE "investors"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCompany Load (1.4ms)[0m  [1m[34mSELECT "companies".* FROM "companies" INNER JOIN "investments" ON "companies"."id" = "investments"."company_id" WHERE "investments"."investor_id" = $1 LIMIT $2[0m  [["investor_id", 1], ["LIMIT", 11]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mCompany Create (0.5ms)[0m  [1m[32mINSERT INTO "companies" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "DEF"], ["created_at", "2021-03-15 03:38:23.709298"], ["updated_at", "2021-03-15 03:38:23.709298"]]
+  [1m[36mInvestment Create (10.6ms)[0m  [1m[32mINSERT INTO "investments" ("investor_id", "company_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["investor_id", 1], ["company_id", 3], ["created_at", "2021-03-15 03:38:23.723570"], ["updated_at", "2021-03-15 03:38:23.723570"]]
+  [1m[35m (0.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mCompany Load (12.8ms)[0m  [1m[34mSELECT "companies".* FROM "companies" INNER JOIN "investments" ON "companies"."id" = "investments"."company_id" WHERE "investments"."investor_id" = $1 LIMIT $2[0m  [["investor_id", 1], ["LIMIT", 11]]
+  [1m[36mInvestor Load (0.6ms)[0m  [1m[34mSELECT "investors".* FROM "investors" WHERE "investors"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mInvestor Load (0.4ms)[0m  [1m[34mSELECT "investors".* FROM "investors" WHERE "investors"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCompany Load (1.0ms)[0m  [1m[34mSELECT "companies".* FROM "companies" INNER JOIN "investments" ON "companies"."id" = "investments"."company_id" WHERE "investments"."investor_id" = $1 LIMIT $2[0m  [["investor_id", 1], ["LIMIT", 11]]
+  [1m[36mInvestment Load (0.3ms)[0m  [1m[34mSELECT "investments".* FROM "investments" LIMIT $1[0m  [["LIMIT", 11]]
+  [1m[36mInvestor Load (0.4ms)[0m  [1m[34mSELECT "investors".* FROM "investors" WHERE "investors"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCompany Load (0.9ms)[0m  [1m[34mSELECT "companies".* FROM "companies" INNER JOIN "investments" ON "companies"."id" = "investments"."company_id" WHERE "investments"."investor_id" = $1[0m  [["investor_id", 1]]
+  [1m[36mInvestor Load (0.4ms)[0m  [1m[34mSELECT "investors".* FROM "investors" WHERE "investors"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCompany Load (0.5ms)[0m  [1m[34mSELECT "companies".* FROM "companies" INNER JOIN "investments" ON "companies"."id" = "investments"."company_id" WHERE "investments"."investor_id" = $1 LIMIT $2[0m  [["investor_id", 2], ["LIMIT", 11]]
+  [1m[36mCompany Load (0.6ms)[0m  [1m[34mSELECT "companies".* FROM "companies" INNER JOIN "investments" ON "companies"."id" = "investments"."company_id" WHERE "investments"."investor_id" = $1[0m  [["investor_id", 2]]
+  [1m[36mInvestor Load (0.4ms)[0m  [1m[34mSELECT "investors".* FROM "investors" WHERE "investors"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mCompany Create (0.7ms)[0m  [1m[32mINSERT INTO "companies" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Zenith"], ["created_at", "2021-03-15 03:52:39.064064"], ["updated_at", "2021-03-15 03:52:39.064064"]]
+  [1m[36mInvestment Create (1.1ms)[0m  [1m[32mINSERT INTO "investments" ("investor_id", "company_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["investor_id", 2], ["company_id", 4], ["created_at", "2021-03-15 03:52:39.074569"], ["updated_at", "2021-03-15 03:52:39.074569"]]
+  [1m[35m (0.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mCompany Load (0.3ms)[0m  [1m[34mSELECT "companies".* FROM "companies" WHERE "companies"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mInvestor Create (0.5ms)[0m  [1m[32mINSERT INTO "investors" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Trav"], ["created_at", "2021-03-15 03:53:46.175727"], ["updated_at", "2021-03-15 03:53:46.175727"]]
+  [1m[36mInvestment Create (0.5ms)[0m  [1m[32mINSERT INTO "investments" ("investor_id", "company_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["investor_id", 3], ["company_id", 1], ["created_at", "2021-03-15 03:53:46.177622"], ["updated_at", "2021-03-15 03:53:46.177622"]]
+  [1m[35m (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mInvestment Load (0.5ms)[0m  [1m[34mSELECT "investments".* FROM "investments"[0m
+  [1m[36mCompany Load (0.7ms)[0m  [1m[34mSELECT "companies".* FROM "companies" INNER JOIN "investments" ON "companies"."id" = "investments"."company_id" WHERE "investments"."investor_id" = $1 LIMIT $2[0m  [["investor_id", 2], ["LIMIT", 11]]
+  [1m[36mCompany Load (0.5ms)[0m  [1m[34mSELECT "companies".* FROM "companies" INNER JOIN "investments" ON "companies"."id" = "investments"."company_id" WHERE "investments"."investor_id" = $1[0m  [["investor_id", 2]]
+  [1m[36mInvestor Load (0.5ms)[0m  [1m[34mSELECT "investors".* FROM "investors" INNER JOIN "investments" ON "investors"."id" = "investments"."investor_id" WHERE "investments"."company_id" = $1[0m  [["company_id", 1]]
